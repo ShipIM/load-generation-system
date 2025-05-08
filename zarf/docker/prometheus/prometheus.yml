@@ -1,0 +1,9 @@
+scrape_configs:
+  - job_name: 'load_generation_system_metrics'
+    metrics_path: /metrics
+    scrape_interval: 100ms
+    file_sd_configs:
+      - files:
+          - /etc/prometheus/targets/*.json
+          - /etc/prometheus/targets/*.yml
+          - /etc/prometheus/targets/*.yaml

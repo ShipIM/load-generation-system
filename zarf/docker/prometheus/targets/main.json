@@ -1,0 +1,12 @@
+[
+    {
+      "targets": [
+        "manager:4000",
+        "node:4001"
+      ],
+      "labels": {
+        "env": "load generation system"
+      }
+    }
+  ]
+  

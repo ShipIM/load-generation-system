@@ -1,0 +1,854 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "load-generation-system",
+    "description": "Load Generation Service Documentation",
+    "contact": {
+      "name": "Ilya Shipunov"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": " localhost"
+    }
+  ],
+  "paths": {
+    "/manager/api/v1/attacks": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Successful get attacks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAttacksResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Attack"
+        ],
+        "summary": "Get active attacks"
+      },
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Successful attack start",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartAttackResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Attack"
+        ],
+        "summary": "Start new attack",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartAttackRequestBody"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/manager/api/v1/attacks/{attack_id}": {
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "Successful attack end",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopAttackResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Attack"
+        ],
+        "summary": "Stop attack",
+        "parameters": [
+          {
+            "name": "attack_id",
+            "in": "path",
+            "description": "Attack id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Attack id"
+            }
+          }
+        ]
+      }
+    },
+    "/manager/api/v1/attacks/{attack_id}/increments": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Successful increment start",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartIncrementResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Attack"
+        ],
+        "summary": "Start new increment",
+        "parameters": [
+          {
+            "name": "attack_id",
+            "in": "path",
+            "description": "Attack id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Attack id"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartIncrementRequestBody"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/manager/api/v1/attacks/{attack_id}/increments/{increment_id}": {
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "Successful increment stop",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopIncrementResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Attack"
+        ],
+        "summary": "Stop increment",
+        "parameters": [
+          {
+            "name": "attack_id",
+            "in": "path",
+            "description": "Attack id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Attack id"
+            }
+          },
+          {
+            "name": "increment_id",
+            "in": "path",
+            "description": "Increment id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Increment id"
+            }
+          }
+        ]
+      }
+    },
+    "/manager/api/v1/nodes": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Successful get nodes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetNodesResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Attack"
+        ],
+        "summary": "Get nodes information"
+      }
+    },
+    "/manager/api/v1/scenarios": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Successful get scenarios",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetScenariosResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Attack"
+        ],
+        "summary": "Get attack scenarios"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AttackInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "wait_time_sec": {
+            "type": "number",
+            "example": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-09-02T13:54:00Z"
+          },
+          "duration_sec": {
+            "type": "integer",
+            "example": 1
+          },
+          "const_config": {
+            "type": "object",
+            "$ref": "#/components/schemas/ConstConfig"
+          },
+          "linear_config": {
+            "type": "object",
+            "$ref": "#/components/schemas/LinearConfig"
+          },
+          "increments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "scenarios": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "scenario": {
+                        "type": "string",
+                        "example": "string"
+                      },
+                      "counter": {
+                        "type": "integer",
+                        "example": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "BadRequestError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ERROR"
+          }
+        }
+      },
+      "ConstConfig": {
+        "type": "object",
+        "properties": {
+          "scenarios": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "GetAttacksResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttackInfo"
+            }
+          }
+        }
+      },
+      "GetNodesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "scenarios": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "attacks": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AttackInfo"
+                  }
+                },
+                "is_active": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetScenariosResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "IncrementInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "scenarios": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "scenario": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "counter": {
+                  "type": "integer",
+                  "example": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ERROR"
+          }
+        }
+      },
+      "LinearConfig": {
+        "type": "object",
+        "properties": {
+          "warm_up_sec": {
+            "type": "integer",
+            "example": 1
+          },
+          "start_counter": {
+            "type": "integer",
+            "example": 1
+          },
+          "end_counter": {
+            "type": "integer",
+            "example": 1
+          },
+          "counter_step": {
+            "type": "integer",
+            "example": 1
+          },
+          "step_interval_sec": {
+            "type": "integer",
+            "example": 1
+          },
+          "scenarios": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "NodeInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "scenarios": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attacks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttackInfo"
+            }
+          },
+          "is_active": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "NotFoundError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ERROR"
+          }
+        }
+      },
+      "ScenarioCounter": {
+        "type": "object",
+        "properties": {
+          "scenario": {
+            "type": "string",
+            "example": "string"
+          },
+          "counter": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      },
+      "ScenarioInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "description": {
+            "type": "string",
+            "example": "string"
+          }
+        }
+      },
+      "StartAttackRequestBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "string"
+          },
+          "wait_time_sec": {
+            "type": "number",
+            "example": 1
+          },
+          "duration_sec": {
+            "type": "integer",
+            "example": 1
+          },
+          "const_config": {
+            "type": "object",
+            "$ref": "#/components/schemas/ConstConfig"
+          },
+          "linear_config": {
+            "type": "object",
+            "$ref": "#/components/schemas/LinearConfig"
+          }
+        }
+      },
+      "StartAttackResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "data": {
+            "type": "object",
+            "$ref": "#/components/schemas/AttackInfo"
+          }
+        }
+      },
+      "StartIncrementRequestBody": {
+        "type": "object",
+        "properties": {
+          "scenarios": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "StartIncrementResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "data": {
+            "type": "object",
+            "$ref": "#/components/schemas/IncrementInfo"
+          }
+        }
+      },
+      "StopAttackResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          }
+        }
+      },
+      "StopIncrementResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "OK"
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          }
+        }
+      },
+      "ValidationErrors": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tag": {
+                  "type": "string"
+                },
+                "field": {
+                  "type": "string"
+                },
+                "param": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ValidationResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ERROR"
+          },
+          "data": {
+            "type": "object",
+            "example": {
+              "errors": [
+                {
+                  "field": "\u003cfield\u003e",
+                  "param": "\u003cparam\u003e",
+                  "tag": "\u003ctag\u003e"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "model.BadRequestError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ERROR"
+          }
+        }
+      },
+      "model.InternalServerError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ERROR"
+          }
+        }
+      },
+      "model.NotFoundError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ERROR"
+          }
+        }
+      },
+      "model.ValidationResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ERROR"
+          },
+          "data": {
+            "type": "object",
+            "example": {
+              "errors": [
+                {
+                  "field": "\u003cfield\u003e",
+                  "param": "\u003cparam\u003e",
+                  "tag": "\u003ctag\u003e"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+services:
+  node:
+    build:
+      context: ../../
+      dockerfile: zarf/docker/Dockerfile
+    restart: always
+    environment:
+      SERVER_HOST: ${NODE_SERVER_HOST}
+      METRICS_PORT: ${NODE_METRICS_PORT}
+      GRPC_MANAGER_HOST: ${GRPC_MANAGER_HOST}
+      NODE_NAME: ${NODE_NAME}
+    command: [ "./load_generation_system", "node" ]
+    ports:
+      - "${NODE_SERVER_PORT}:${NODE_SERVER_PORT}"
+      - "${NODE_METRICS_PORT}:${NODE_METRICS_PORT}"
+    depends_on:
+      - manager
+
+  manager:
+    build:
+      context: ../../
+      dockerfile: zarf/docker/Dockerfile
+    restart: always
+    environment:
+      SERVER_HOST: ${MANAGER_SERVER_HOST}
+      GRPC_MANAGER_HOST: ${GRPC_MANAGER_HOST}
+      METRICS_PORT: ${MANAGER_METRICS_PORT}
+      RETRY_INTERVAL_SEC: ${MANAGER_RETRY_INTERVAL_SEC}
+      RECOVERY_INTERVAL_SEC: ${MANAGER_RECOVERY_INTERVAL_SEC}
+    ports:
+      - "${MANAGER_SERVER_PORT}:${MANAGER_SERVER_PORT}"
+    command: [ "./load_generation_system", "manager" ]
+    
+  prometheus:
+    image: prom/prometheus:v2.53.2
+    volumes:
+      - ./prometheus:/etc/prometheus/
+    command:
+      - '--storage.tsdb.retention.time=${PROMETHEUS_MAX_DAYS}d'
+      - '--storage.tsdb.retention.size=${PROMETHEUS_MAX_SIZE_GB}GB'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    container_name: prometheus
+    restart: always
+    ports:
+      - "${PROMETHEUS_PORT}:${PROMETHEUS_PORT}"
+
+  grafana:
+    image: grafana/grafana:11.1.4
+    container_name: grafana
+    restart: always
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      TZ: "Europe/Moscow"
+    ports:
+      - "${GRAFANA_PORT}:${GRAFANA_PORT}"
+    depends_on:
+      - prometheus
